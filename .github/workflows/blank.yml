@@ -1,0 +1,75 @@
+# .github/workflows/update-lists.yml
+
+name: Update SmartDNS Lists from gfwlist
+
+on:
+  # 触发器配置
+  schedule:
+    # 在每天 15:00 UTC 运行，即北京/东京时间 00:00
+    # JST is UTC+9, so 00:00 JST is 15:00 UTC the previous day.
+    - cron: '0 15 * * *'
+  
+  # 允许在 GitHub Action 页面手动触发此工作流，方便测试
+  workflow_dispatch:
+
+jobs:
+  update-and-commit:
+    # 使用最新的 Ubuntu 运行环境
+    runs-on: ubuntu-latest
+
+    # 授予 job 写入仓库内容的权限，这是提交变更所必需的
+    permissions:
+      contents: write
+
+    steps:
+      # 第一步：检出您自己的仓库 (Polaris-Leo/smartdns)
+      # 目的是为了获取 convert_gfwlist.py 脚本并在此基础上进行提交
+      - name: Checkout self repository
+        uses: actions/checkout@v4
+
+      # 第二步：检出 gfwlist/gfwlist 仓库
+      # 我们将它下载到一个名为 'gfwlist-repo' 的子目录中，以获取最新的 list.txt
+      - name: Checkout gfwlist repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'gfwlist/gfwlist'
+          path: 'gfwlist-repo'
+
+      # 第三步：设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # 第四步：运行您的 Python 脚本来生成文件
+      - name: Run script to generate domain lists
+        run: |
+          # 您的脚本需要一个名为 list.txt 的文件在当前目录
+          # 我们从刚刚检出的 gfwlist-repo 目录中把它复制过来
+          echo "Copying list.txt from gfwlist repository..."
+          cp gfwlist-repo/list.txt .
+
+          # 运行脚本，它会读取 list.txt 并在 'smartdns_domain_lists' 目录中生成 .conf 文件
+          echo "Running convert_gfwlist.py..."
+          python convert_gfwlist.py
+
+      # 第五步：提交并推送生成的文件
+      - name: Commit and push generated files
+        run: |
+          # 配置 Git 的用户信息为 GitHub Actions 机器人
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # 检查工作目录是否有变更（新生成或修改的文件）
+          # 如果 git status --porcelain 有输出，说明有变更
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Changes detected. Committing and pushing..."
+            # 添加脚本生成的整个目录到暂存区
+            git add smartdns_domain_lists/
+            git add gfwlist-merged.conf # 您的脚本也会在根目录生成这个文件
+            # 创建提交。在消息中加入 [skip ci] 可以防止这次提交再次触发 CI/CD，避免无限循环
+            git commit -m "Automated update of SmartDNS lists from gfwlist" -m "Generated at $(date -u)"
+            git push
+          else
+            echo "No changes to commit."
+          fi
