@@ -12,6 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # ADD THIS PERMISSIONS BLOCK
+    permissions:
+      contents: write
+    
     steps:
       # 1. 检出（Checkout）你的代码仓库
       # 这样工作流才能访问你的仓库，并将生成的文件保存进去
