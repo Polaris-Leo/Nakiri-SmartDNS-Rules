@@ -1,52 +1,39 @@
-# 工作流名称
 name: Update PrivateTracker Domain List
 
-# 触发器：设置为每晚定时执行（北京时间上午8点，UTC时间0点）
 on:
   schedule:
     - cron: '0 0 * * *'
-  # 也允许手动触发
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # ADD THIS PERMISSIONS BLOCK
     permissions:
       contents: write
-    
+
     steps:
-      # 1. 检出（Checkout）你的代码仓库
-      # 这样工作流才能访问你的仓库，并将生成的文件保存进去
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. 下载并转换规则
-      - name: Download and process the domain list
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
         run: |
-          # 定义源文件URL和输出文件名
-          SOURCE_URL="https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/PrivateTracker/PrivateTracker.yaml"
-          OUTPUT_FILE="pt_domains.txt"
+          python -m pip install --upgrade pip
+          pip install requests pyyaml
 
-          # 使用 curl 下载文件内容，然后通过 grep 和 sed 处理
-          # grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD),' -> 筛选出所有域名相关的行
-          # sed -E 's/^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD),//' -> 移除每行前面的类型标识
-          curl -s $SOURCE_URL | grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD),' | sed -E 's/^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD),//' > $OUTPUT_FILE
+      # 将这里的脚本名更改为 process_pt_rules.py
+      - name: Run Python script to generate domain list
+        run: python process_pt_rules.py
 
-          # 显示文件内容的前5行，用于日志检查
-          echo "Generated file content (first 5 lines):"
-          head -n 5 $OUTPUT_FILE
-
-      # 3. 提交并推送文件到仓库
-      # 如果文件有变化，这个步骤会自动创建一个提交并推送到你的主分支
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add pt_domains.txt
-          # 使用 git status --porcelain 检查是否有变动
-          # 如果有，则提交并推送
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "chore: Auto-update PrivateTracker domain list"
             git push
