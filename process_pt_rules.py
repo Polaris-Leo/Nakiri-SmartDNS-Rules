@@ -4,7 +4,7 @@ import yaml
 # 源文件 URL
 url = "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/PrivateTracker/PrivateTracker.yaml"
 # 输出文件名
-output_file = "pt_domains.txt"
+output_file = "pt_domains.conf"
 
 # 定义需要提取的规则类型
 valid_types = ["DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"]
