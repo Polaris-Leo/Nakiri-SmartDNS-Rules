@@ -26,7 +26,7 @@ jobs:
           pip install requests pyyaml
 
       - name: Run Python script to generate domain list
-        run: python process_pt_rules.py
+        run: python scripts/process_pt_rules.py
 
       - name: Commit and push if changed
         run: |
