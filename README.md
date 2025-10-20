@@ -1,4 +1,4 @@
-# smartdns
+# SmartDNS
 NakiriPolaris SmartDNS Rules/Lists
 
 ## 每晚0点整自动更新
