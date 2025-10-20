@@ -36,7 +36,7 @@ jobs:
           cp gfwlist-repo/list.txt .
           
           echo "Running convert_gfwlist.py..."
-          python convert_gfwlist.py
+          python scripts/convert_gfwlist.py
 
       # 第五步：提交并推送生成的文件 (已修正)
       - name: Commit and push generated files
