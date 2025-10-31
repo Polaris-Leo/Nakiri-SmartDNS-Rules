@@ -2,8 +2,11 @@ name: Update Bilibili Rules
 
 on:
   schedule:
-    - cron: "0 16 * * *"  # 每天 0:00（北京时间），GitHub 运行在 UTC，需要 +8h
-  workflow_dispatch:      # 允许手动触发
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update:
@@ -12,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
