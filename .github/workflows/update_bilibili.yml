@@ -1,0 +1,33 @@
+name: Update Bilibili Rules
+
+on:
+  schedule:
+    - cron: "0 16 * * *"  # 每天 0:00（北京时间），GitHub 运行在 UTC，需要 +8h
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyyaml requests
+
+      - name: Run update script
+        run: python scripts/bilibili_rules.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ios_rules/bilibili.conf
+          git commit -m "Auto-update Bilibili rules $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
