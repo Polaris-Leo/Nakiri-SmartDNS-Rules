@@ -1,0 +1,38 @@
+name: Update China Domain Rules
+
+on:
+  schedule:
+    - cron: "0 16 * * *"  # 每天 0:00 (北京时间)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run update script
+        run: python script/china_rules.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ios_rules/china.conf
+          git commit -m "Auto-update China domains $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
