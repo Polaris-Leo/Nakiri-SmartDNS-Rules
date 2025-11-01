@@ -1,0 +1,38 @@
+name: Update China-Merged Rules
+
+on:
+  schedule:
+    - cron: "0 17 * * *"   # 每天北京时间 1:00（UTC+8 → UTC=17）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run merge script
+        run: python china_merged.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add smartdns_domain_lists/china-merged.conf
+          git commit -m "Auto-update china-merged.conf $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
