@@ -33,6 +33,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ios_rules/china.conf
+          git add smartdns_domain_lists/china.conf
           git commit -m "Auto-update China domains $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push
