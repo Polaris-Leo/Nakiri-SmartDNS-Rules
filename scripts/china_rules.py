@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 # 输出目录和文件
-output_dir = "ios_rules"
+output_dir = "smartdns_domain_lists"
 output_file_name = "china.conf"
 output_file_path = os.path.join(output_dir, output_file_name)
 
