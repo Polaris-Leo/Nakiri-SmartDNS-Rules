@@ -27,7 +27,7 @@ jobs:
         run: pip install requests
 
       - name: Run merge script
-        run: python china_merged.py
+        run: python scripts/china_merged.py
 
       - name: Commit and push results
         run: |
