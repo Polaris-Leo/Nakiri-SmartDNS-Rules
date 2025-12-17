@@ -1,0 +1,42 @@
+# =========================
+# iOS / SmartDNS rules config
+# =========================
+
+global:
+  valid_types:
+    - DOMAIN
+    - DOMAIN-SUFFIX
+    - DOMAIN-KEYWORD
+
+rules:
+  - name: bilibili
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml
+    output:
+      file: ios_rules/bilibili.conf
+      format: domain        # domain | smartdns (预留)
+    enabled: true
+
+  - name: baidu
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Baidu/Baidu.yaml
+    output:
+      file: ios_rules/baidu.conf
+      format: domain
+    enabled: true
+
+  - name: private_tracker
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/PrivateTracker/PrivateTracker.yaml
+    output:
+      file: ios_rules/pt_domains.conf
+      format: domain
+    enabled: true
+
+  - name: hoyoverse
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/HoYoverse/HoYoverse.yaml
+    output:
+      file: ios_rules/hoyoverse.conf
+      format: domain
+    enabled: true
