@@ -13,7 +13,7 @@ other_urls = [
     "https://raw.githubusercontent.com/Polaris-Leo/Nakiri-SmartDNS-Rules/main/ios_rules/baidu.conf",
     "https://raw.githubusercontent.com/Polaris-Leo/Nakiri-SmartDNS-Rules/main/ios_rules/bilibili.conf",
     "https://raw.githubusercontent.com/Polaris-Leo/Nakiri-SmartDNS-Rules/main/ios_rules/pt_domains.conf",
-    "https://raw.githubusercontent.com/Polaris-Leo/Nakiri-SmartDNS-Rules/refs/heads/main/ios_rules/hoyoverse.conf"
+    "https://raw.githubusercontent.com/Polaris-Leo/Nakiri-SmartDNS-Rules/main/ios_rules/hoyoverse.conf"
 ]
 
 print(f"[{datetime.now()}] Starting merge process...")
