@@ -39,14 +39,21 @@ def write_output(domains, output_conf):
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     with open(output_file, "w", encoding="utf-8") as f:
-        for d in domains:
-            if fmt == "domain":
+        if fmt == "smartdns_list":
+            display_name = output_conf.get("display_name", os.path.splitext(os.path.basename(output_file))[0])
+            f.write(f"# {display_name} - Plain domain list for SmartDNS\n")
+            f.write(f"# Total domains: {len(domains)}\n\n")
+            for d in domains:
                 f.write(d + "\n")
-            elif fmt == "smartdns":
-                # 预留：server=/example.com/1.1.1.1
+        elif fmt == "domain":
+            for d in domains:
+                f.write(d + "\n")
+        elif fmt == "smartdns":
+            # 预留：server=/example.com/1.1.1.1
+            for d in domains:
                 f.write(f"server=/{d}/\n")
-            else:
-                raise ValueError(f"Unknown output format: {fmt}")
+        else:
+            raise ValueError(f"Unknown output format: {fmt}")
 
 def process_rule(rule, valid_types):
     name = rule["name"]

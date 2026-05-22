@@ -40,3 +40,12 @@ rules:
       file: ios_rules/hoyoverse.conf
       format: domain
     enabled: true
+
+  - name: microsoft
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml
+    output:
+      file: smartdns_domain_lists/Microsoft.conf
+      format: smartdns_list
+      display_name: Microsoft
+    enabled: true
