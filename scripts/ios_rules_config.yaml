@@ -49,3 +49,21 @@ rules:
       format: smartdns_list
       display_name: Microsoft
     enabled: true
+
+  - name: cloudflare
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Cloudflare/Cloudflare.yaml
+    output:
+      file: smartdns_domain_lists/Cloudflare.conf
+      format: smartdns_list
+      display_name: Cloudflare
+    enabled: true
+
+  - name: cloudflare_cn
+    source:
+      url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Cloudflarecn/Cloudflarecn.yaml
+    output:
+      file: smartdns_domain_lists/CloudflareCN.conf
+      format: smartdns_list
+      display_name: CloudflareCN
+    enabled: true
